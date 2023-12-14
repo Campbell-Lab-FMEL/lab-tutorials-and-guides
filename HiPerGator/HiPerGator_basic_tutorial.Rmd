@@ -1,0 +1,482 @@
+---
+title: "Getting started with HiPerGator"
+author: "Amy Bauer"
+date: last edited "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_float: yes
+    theme: lumen
+    highlight: zenburn
+---
+
+##### Note:
+
+This is a working document. I will continue updating it as I learn how to use the cluster and improve on my skills, helping me be a better and more efficient HPG user.
+
+------------------------------------------------------------------------
+
+## HiPerGator Overview
+
+The HiPerGator (HPG) cluster is the University of Florida supercomputer, maintained by UFIT Research Computing. The official [UF Research Computing website](https://www.rc.ufl.edu/about/hipergator/) provides a comprehensive overview on the cluster that you may visit for detailed information on the HPG. For the purpose of this mini tutorial, the following section will provide you with a general overview of the cluster that will help you orient yourself as you become familiar with using HPG for your research.
+
+------------------------------------------------------------------------
+
+# Get started on HiPerGator
+
+## Prerequisites
+
+To use HiPerGator, you must submit an HPG account request indicating their PI/a group leader as the sponsor. Once approved, a linux account will be created. Campbell lab members will typically have a University of Florida GatorLink account and may request an account directly via this contact form [here](https://gravity.rc.ufl.edu/access/request-account/)
+
+As user with a gatorlink associated account, we can access HPG using an **SSH connection**. This requires us to be in the UF network, and you may need to connect to the network via eduVPN first if you are not on campus. You can find instructions on how to connect via eduVPN [here](https://help.rc.ufl.edu/doc/Federated_login)
+
+------------------------------------------------------------------------
+
+## Connect to HiPerGator
+
+There are multiple ways to connect to the HPG system, and specifics may depend on your computer's operating system. In the following, you will find the four primary ways to access HPG and their respective server address. For more information, see [this help page](https://help.rc.ufl.edu/doc/HPG_Interfaces)
+
+-   Command line: `hpg.rc.ufl.edu`
+-   Jupyter hub (interactive notebook server): `jhub.rc.ufl.edu`
+-   Galaxy (web-based platform): `galaxy.rc.ufl.edu`
+-   Open OnDemand (GUI based): `ood.rc.ufl.edu`
+
+### Connect using command line (via SSH)
+
+You can use any command line application, e.g., on Windows computers you may use *Command Prompt* (CMD) or *Windows Subsystem for Linux* (wsl, see [here](https://learn.microsoft.com/en-us/windows/wsl/setup/environment) for setup instructions)
+
+To access, use the application search tool on your computer and enter **CMD** or **wsl**
+
+```         
+ssh [gatorlink]@hpg.rc.ufl.edu
+ssh [campbell.lab]@hpg.rc.ufl.edu
+```
+
+If you are connecting your account for the first time, you will get the following warning message:
+
+```         
+The authenticity of host 'hpg.rc.ufl.edu (128.227.221.250)' can't be established.
+ECDSA key fingerprint is [...key...]
+Are you sure you want to continue connecting (yes/no/[fingerprint])?
+```
+
+Type `yes` to continue.\
+You will then be prompted to enter your **(gatorlink) password**. The password space will remain blank while you type. *Confirm* by hitting enter, and select your preferred method to *validate* your gatorlink account via Duo.
+
+## Navigating HiPerGator
+
+Once you are successfully connected, you find yourself on one of the available login nodes. In command line, your username and position are shown like this:
+
+```         
+[user]@[server] 
+[amelybauer@login5 ~]  # I am connected to login5 
+                       # current location: ~ (home directory)
+```
+
+#### Navigating HiPerGator in command line
+
+To effectively use the HPC, you will likely sooner than later have to use command line. Below, you will find some basic commands that will help you get started moving around using this text-based way of accessing a computer.
+
+Make use of the tab completion function as you type paths to navigate faster along paths and avoid typos.
+
+```         
+# Moving around 
+
+pwd       # prints working directory
+
+cd        # change directory
+cd </directorypath/directoryname> 
+cd ~      # Navigate to HOME directory
+cd ..       # Move one directory level up 
+
+ls        # list all files and subdirectories in the current directory
+ls -R       # list all files, including those in sub-directories
+ls -a       # list all files, including hidden files 
+ls -l     # list all files and directories with detailed information
+ls -al    
+```
+
+When managing files, remember that any actions performed on a specific filename will happen in the current working directory uness you specify a file path:
+
+```         
+# Manage files, folders, etc
+
+mkdir <directoryname>           # create new directory 
+rmdir   <directoryname>         # delete a directory
+
+head <filename>               # print first lines of file (default: 10 lines)
+tail <filename>               # print last lines of file (default: 10 lines)
+cat <filename>                # read files, displays entire file content
+more <filename>               # read files with text filling one screen at a time, allows scrolling
+less <filename>               # read file content one screen at a time (loads screen content only, fast processing speed)
+
+q                             # quit current process
+
+
+cp                            # copy 
+cp <source> <destination>
+
+# copy files
+cp ./DirectoryA_1/<filename.file> ./DirectoryA_2
+# copy directories use -r to recursively copy the folder and all its content
+cp -r ./DirectoryA_1/<folder>/ ./DirectoryA_2       
+
+mv                            # move or rename 
+mv <source> <destination>     # move
+mv <filename> <new_filename>  # rename
+
+rm        # delete
+
+
+nano                          # build-in Linux text editor
+nano <filename>               # open file in nano text editor
+<ctl> + x                     # close file in nano text editor
+```
+
+```         
+man        # get help information on a command
+history    # list of all past commands used in current terminal session
+clear        # clears terminal
+
+exit       # exit current session, disconnect from hpg.rc.ufl.edu
+```
+
+### Storages
+
+Each user has access to three different types of storage on HiPerGator: home, blue, and orange. Each storage serves a different purpose. Each user will have their own directory within their primary and any other secondary group directories on blue and orange.
+
+Tab completion only works with mounted directories. This means after logging in, you won't be able to use it to navigate to your files on blue or orange. You need to access your group directory first to mount it. However, you can move to your user directory directly via `cd </directorypath/directoryname>`, auto-mounting the group directory in the process.
+
+#### Home
+
+To acces home, use `~`, `/home/<user>` or `$HOME`. While it is the smallest storage space, it is to some degree protected by daily screenshots.
+
+-   40GB storage space (default)
+-   Use to store important sripts, code, and compiled applications
+-   Access the last Week of snapshots at \~/.snapshot/
+
+**DO NOT** use `home` for reading or writing data files in any analyses run on HiPerGator. Doing so will get your account suspended.
+
+#### Blue
+
+To access storage on blue, use `/blue/<group>`. You will have your own directory within the group of your sponsor that is not accessible to other users, as well as access to the group's shared files.
+
+Blue will be the most important storage on the cluster for you. - Use blue for ALL input and output files used in your analyses
+
+```         
+/blue/<group>           # automounted path to group's blue server allocation
+/blue/<group>/<user>    # personal directory within group (user only access)
+/blue/<group>/share     # shared files directory (all member access)
+```
+
+#### Orange
+
+The orange storage's hardware capabilities are more limited than that of blue, making it much slower.
+
+-   Primarily archival purpose
+-   Not intended for running (large) jobs
+
+```         
+/orange/<group>         # automounted path to group's orange server allocation
+/orange/<group>/<user>  # personal directory within group (user only access)
+```
+
+#### Check Resources
+
+You can check the available storage space for a group
+
+```         
+home_quota        # 40 GB/user default
+
+blue_quota        # available group storage on blue
+orange_quota      # available group storage on orange
+
+ncdu              # interactive program, showing file sizes etc
+```
+
+## Run Jobs on HiPerGator
+
+Importantly, before you run a code on HiPerGator, you **must** optimize your R script to run on the HPG cluster. At the very least, this requires you to write a script that is able to run without any user input.
+
+On HPG, jobs are scheduled through SLURM. To schedule a job, you need to submit a job script. For more information on how to schedule and manage jobs and resources, and for more SLURM info, visit the [UF research computing help site](https://help.rc.ufl.edu/doc/Category:Scheduler).
+
+To check the status of any SLURM account as well as overall HPG resource, use
+
+```         
+slurmInfo             # returns information for primary account & HPG
+
+slurmInfo <group>     # returns information for selected account & HPG
+slurmInfo clord
+```
+
+This returns the following overview:
+
+```         
+----------------------------------------------------------------------
+Allocation summary:    Time Limit             Hardware Resources
+   Investment QOS           Hours          CPU     MEM(GB)     GPU
+----------------------------------------------------------------------
+            clord             744            9          70       4
+----------------------------------------------------------------------
+
+No running jobs found.
+
+----------------------------------------------------------------------
+HiPerGator Utilization
+                 CPUs: Used (%) /  Total    MEM(GB): Used (%) /  Total
+----------------------------------------------------------------------
+        Total :    49437 ( 56%) /  86956        239949( 33%) / 707746
+----------------------------------------------------------------------
+* Burst QOS uses idle cores at low priority with a 4-day time limit
+* Duplicate partition(s): hpg-ai / gpu
+
+Run 'slurmInfo -h' to see all available options
+```
+
+### Sample SLURM Scripts
+
+These scripts originate from the UF research computing help page. For more information and further references, see the [UF research computing sample SLURM scripts page](https://help.rc.ufl.edu/doc/Sample_SLURM_Scripts).
+
+<details>
+
+<summary>Sample SLURM Script: Simple, Single-threaded Job Script</summary>
+
+<br>
+
+```         
+#!/bin/bash
+#SBATCH --job-name=serial_job_test    # Job name
+#SBATCH --mail-type=END,FAIL          # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=email@ufl.edu     # Where to send mail  
+#SBATCH --ntasks=1                    # Run on a single CPU
+#SBATCH --mem=1gb                     # Job memory request
+#SBATCH --time=00:05:00               # Time limit hrs:min:sec
+#SBATCH --output=serial_test_%j.log   # Standard output and error log
+
+pwd; hostname; date
+
+module load R
+
+echo "Running Rscript on a single CPU core"
+
+Rscript <file_name>.R
+
+date
+```
+
+</details>
+
+<details>
+
+<summary>Sample SLURM Script: Multi-threaded Job Scripts</summary>
+
+<br > **Example**: request 8 tasks, each with 4 cores. These should be split evenly on 2 nodes, and within the nodes, the 4 tasks should be evenly split on the two sockets. So each CPU on the two nodes will have 2 tasks, each with 4 cores. MPI ranks are distributed cyclically on nodes and sockets.
+
+```         
+#!/bin/bash
+#SBATCH --job-name=hybrid_job_test      # Job name
+#SBATCH --mail-type=END,FAIL            # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=email@ufl.edu       # Where to send mail    
+#SBATCH --ntasks=8                      # Number of MPI ranks
+#SBATCH --cpus-per-task=4               # Number of cores per MPI rank 
+#SBATCH --nodes=2                       # Number of nodes
+#SBATCH --ntasks-per-node=4             # How many tasks on each node
+#SBATCH --ntasks-per-socket=2           # How many tasks on each CPU or socket
+#SBATCH --mem-per-cpu=100mb             # Memory per core
+#SBATCH --time=00:05:00                 # Time limit hrs:min:sec
+#SBATCH --output=hybrid_test_%j.log     # Standard output and error log
+
+pwd; hostname; date
+
+module load R
+
+echo "Running Rscript with multiple tasks"
+
+Rscript <file_name>.R
+
+date
+```
+
+**Example**: request 8 tasks, each with 8 cores. These should be split evenly on 4 nodes, and within the nodes, the 2 tasks should be split, one on each of the two sockets. So each CPU on the two nodes will have one tasks, each with 8 cores. MPI ranks are distributed cyclically on nodes and sockets.
+
+```         
+#!/bin/bash
+#SBATCH --job-name=LAMMPS
+#SBATCH --output=LAMMPS_%j.out
+#SBATCH --mail-type=END,FAIL
+#SBATCH --mail-user=<email_address>
+#SBATCH --nodes=4              # Number of nodes
+#SBATCH --ntasks=8             # Number of MPI ranks
+#SBATCH --ntasks-per-node=2    # Number of MPI ranks per node
+#SBATCH --ntasks-per-socket=1  # Number of tasks per processor socket on the node
+#SBATCH --cpus-per-task=8      # Number of OpenMP threads for each MPI process/rank
+#SBATCH --mem-per-cpu=2000mb   # Per processor memory request
+#SBATCH --time=4-00:00:00      # Walltime in hh:mm:ss or d-hh:mm:ss
+
+pwd; hostname; date
+
+module load R
+
+echo "Running Rscript with multiple tasks"
+
+Rscript <file_name>.R
+
+date
+```
+
+</details>
+
+<details>
+
+<summary>Sample SLURM Script: Annotated Script</summary>
+
+```         
+#!/bin/bash
+#SBATCH --job-name=hybrid_job_test      # Job name
+#SBATCH --mail-type=END,FAIL            # Mail events (NONE, BEGIN, END, FAIL, ALL)
+#SBATCH --mail-user=email@ufl.edu       # Where to send mail    
+#SBATCH --qos=<group>                   # Select high-priority investment QOS
+#SBATCH --qos=<group>-b                 # Select low-priority burst QOS
+#SBATCH --ntasks=8                      # Number of MPI ranks
+#SBATCH --cpus-per-task=4               # Number of cores per MPI rank 
+#SBATCH --nodes=2                       # Number of nodes
+#SBATCH --ntasks-per-node=4             # How many tasks on each node
+#SBATCH --ntasks-per-socket=2           # How many tasks on each CPU or socket
+#SBATCH --mem-per-cpu=100mb             # Memory per core
+#SBATCH --time=00:05:00                 # Time limit hrs:min:sec
+#SBATCH --output=hybrid_test_%j.log     # Standard output and error log
+
+pwd; hostname; date                     # Add host, time, and directory name (helps troubleshooting)
+
+module load R                           # load the software needed
+
+echo "Running Rscript with multiple tasks"
+
+Rscript <file_name>.R                   # run selected script in software
+
+date
+```
+
+</details>
+
+### Basic SLURM commands
+
+```         
+sbatch <SLURM_job_script.sh>            # submit job script
+
+squeue -u <user>                        # check status of submitted jobs
+
+scancel                                 # cancel jobs - use `man scancel` for details
+scancel <jobid>                         # cancel specified job
+scancel --name <jobname>                # cancel specified job by name
+scancel --user <user>                   # cancel all jobs of user
+scancel --state PENDING --user <user>   # cancel all pending jobs of user
+```
+
+### Check Jobs
+
+#### Current job status
+
+`squeue -u <user>` will return information in the following overview format:
+
+```         
+   JOBID   PARTITION   NAME       USER        ST    TIME    NODES   NODELIST(REASON)
+
+
+   JOBID   PARTITION   NAME       USER        ST    TIME    NODES   NODELIST(REASON)
+13929727   hpg-defau   sys/dash   amelybau    R    27:18        2   c0704a-s[1-2]
+```
+
+Jobs typically pass through several states. `ST` returns the current state of job `<jobID>`. Most likely, you will see your submitted jobs return one of the following states:
+
+`PD` **Pending**, typically when you opt for a boosted job `R` **Running** `TO` **Timeout**, when your job is being terminated due to reaching its time limit
+
+#### Check job information
+
+To check job information, the basic command is `sacct`:
+
+```         
+sacct           # returns all jobs scheduled on the curent day
+
+sacct -S <MMDD> # all jobs scheduled since the selected start [-S] date 
+sacct -S 1030   # all jobs scheduled since 10/30
+```
+
+By default, the command returns information of the following columns:
+
+```         
+JobID    JobName  Partition    Account  AllocCPUS      State ExitCode 
+```
+
+You can also modify the `sacct` command to return specific information.
+
+For example, the command below allows you to see the number of CPUS, total memory use, and wall time of all jobs since October 30th
+
+```         
+sacct -S 1030 -o JobIDRaw,JobName,NCPUS,MaxRSS,Elapsed
+sacct -S 1030 --format=JobIDRaw,JobName,NCPUS,MaxRSS,Elapsed
+```
+
+To see the requested and total used memory, you can use
+
+```         
+sacct -o JobID,ReqMem,MaxRSS
+sacct --format=JobID,ReqMem,MaxRSS
+```
+
+<details>
+
+<summary>Expand: full list of fields available with `sacct`</summary>
+
+```         
+Fields available:
+
+Account             AdminComment        AllocCPUS           AllocNodes
+AllocTRES           AssocID             AveCPU              AveCPUFreq
+AveDiskRead         AveDiskWrite        AvePages            AveRSS
+AveVMSize           BlockID             Cluster             Comment
+Constraints         ConsumedEnergy      ConsumedEnergyRaw   Container
+CPUTime             CPUTimeRAW          DBIndex             DerivedExitCode
+Elapsed             ElapsedRaw          Eligible            End
+ExitCode            FailedNode          Flags               GID
+Group               JobID               JobIDRaw            JobName
+Layout              MaxDiskRead         MaxDiskReadNode     MaxDiskReadTask
+MaxDiskWrite        MaxDiskWriteNode    MaxDiskWriteTask    MaxPages
+MaxPagesNode        MaxPagesTask        MaxRSS              MaxRSSNode
+MaxRSSTask          MaxVMSize           MaxVMSizeNode       MaxVMSizeTask
+McsLabel            MinCPU              MinCPUNode          MinCPUTask
+NCPUS               NNodes              NodeList            NTasks
+Partition           Planned             PlannedCPU          PlannedCPURAW
+Priority            QOS                 QOSRAW              Reason
+ReqCPUFreq          ReqCPUFreqGov       ReqCPUFreqMax       ReqCPUFreqMin
+ReqCPUS             ReqMem              ReqNodes            ReqTRES
+Reservation         ReservationId       Start               State
+Submit              SubmitLine          Suspended           SystemComment
+SystemCPU           Timelimit           TimelimitRaw        TotalCPU
+TRESUsageInAve      TRESUsageInMax      TRESUsageInMaxNode  TRESUsageInMaxTask
+TRESUsageInMin      TRESUsageInMinNode  TRESUsageInMinTask  TRESUsageInTot
+TRESUsageOutAve     TRESUsageOutMax     TRESUsageOutMaxNode TRESUsageOutMaxTask
+TRESUsageOutMin     TRESUsageOutMinNode TRESUsageOutMinTask TRESUsageOutTot
+UID                 User                UserCPU             WCKey
+WCKeyID             WorkDir
+```
+
+For detailed information on each of these fields, visit the `sacct` help on the [SLURM scheduler webpage](https://slurm.schedmd.com/sacct.html).
+
+</details>
+
+### Check System Performance
+
+To get an overview of currently running processes and see system performance, we can use the linux `top` command.
+
+```         
+top             # opens top display
+top -u <user>   # filters top view to user run processes
+
+q           # quit top view
+```
+
+The top view crams a lot of information into the screen, broken into two main parts: a header (or dashboard) and a table. Both are updated every 3 seconds (default setting).
+
+The dashboard is the command's summary area, which provides you with a summary of the system in general (lines 4 and 5: total amount of phyical and swap memory, respectively, in MiB). The table is the command's task area, which shows a list of the system's processes.
