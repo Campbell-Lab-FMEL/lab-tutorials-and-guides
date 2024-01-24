@@ -1,11 +1,14 @@
 Mini git tutorial 1 - getting the Campbell Lab started
 ================
 Amy Bauer
-5/9/2022
+last edited “2024-01-24”
 
 ------------------------------------------------------------------------
 
 *This mini workflow assumes you already have*
+
+**UPDATE 1/24/2024** *for Windows 11, install wsl as described in 1.,
+then install the WSL2 app from the windows app store*
 
 *1. wsl installed on your Windows computer. You can install wsl by
 opening PowerShell and running `wsl --install`. For more information,
@@ -71,7 +74,7 @@ public key.
 
 We can now copy the SSH key (it starts with *ssh-rsa*) and use our
 browser to head to GitHub, where we navigate to our profile settings.
-Here, we click on the **SSH and GPG keys** tab, enter our new SSH key,
+Here, we klick on the **SSH and GPG keys** tab, enter our new SSH key,
 and save it.
 
 ------------------------------------------------------------------------
@@ -101,7 +104,7 @@ our browser, we navigate to the repository we wish to clone. Here, we
 click on the green code button to retrieve the link. Since we previously
 added a SSH key to our profile, we will clone using the **SSH** path.
 
-<img src="./github/git_clone.png" alt="find clone link on github" width="533" height="240"/>
+<img src="./github/git_clone.png" alt="find clone link on github" width="533" height="240">
 
     git init                   # create a new local repository
 
@@ -156,7 +159,7 @@ example, we might want to merge new changes that were made in branch
 
 Does this look familiar?
 
-<img src="./github/git_savedfiles.png" alt="Screenshot of a timeline based name saving system for word documents" width="535" height="90"/>
+<img src="./github/git_savedfiles.png" alt="Screenshot of a timeline based name saving system for word documents" width="535" height="90">
 
 Git essentially creates something very similar and thus serves as a
 timeline management utility. With above word documents serving as
@@ -250,7 +253,7 @@ Petrusilius Zwackelmann walked around on Amy’s keyboard while she went
 to grab a snack. Unbeknownst of Petrie’s sabotage, she then went and
 staged (or even committed) the changed .r file.
 
-<img src="./github/git_serotonin_boost.jpg" alt="Screenshot of wsl pushing a project to remote main branch" width="535" length="266"/>
+<img src="./github/git_serotonin_boost.jpg" alt="Screenshot of wsl pushing a project to remote main branch" width="535" length="266">
 
 Luckily, we can undo changes using the `git reset` command.
 
@@ -371,7 +374,7 @@ branch.
 
     git push origin main                    # pushes changes from the local main to the remote main branch
 
-<img src="./github/git_push_to_main.png" alt="Screenshot of wsl pushing a project to remote main branch" width="539" length="394"/>
+<img src="./github/git_push_to_main.png" alt="Screenshot of wsl pushing a project to remote main branch" width="539" length="394">
 
 ------------------------------------------------------------------------
 

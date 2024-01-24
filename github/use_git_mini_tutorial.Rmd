@@ -1,7 +1,7 @@
 ---
 title: "Mini git tutorial 1 - getting the Campbell Lab started"
 author: "Amy Bauer"
-date: "5/9/2022"
+date: last edited "`r Sys.Date()`"
 output:
   github_document: default
   rmarkdown::github_document: default
@@ -12,6 +12,8 @@ output:
 ***
 
 *This mini workflow assumes you already have* 
+
+**UPDATE 1/24/2024** *for Windows 11, install wsl as described in 1., then install the WSL2 app from the windows app store*
 
 *1. wsl installed on your Windows computer. You can install wsl by opening PowerShell and running `wsl --install`. For more information, see <https://docs.microsoft.com/en-us/windows/wsl/setup/environment>* 
 
